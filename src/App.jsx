@@ -3,6 +3,119 @@ import ReactMarkdown from 'react-markdown';
 import { useState, useEffect, useRef } from 'react';
 import './index.css';
 
+// CSS-based 3D cartoon developer
+function DeveloperMascot() {
+  return (
+    <div className="developer-scene" aria-label="Cartoon developer working on a laptop">
+      <div className="scene-orbit orbit-one"></div>
+      <div className="scene-orbit orbit-two"></div>
+
+      <div className="dev-spark spark-one">✦</div>
+      <div className="dev-spark spark-two">✧</div>
+      <div className="dev-spark spark-three">+</div>
+
+      <div className="dev-floating-card dev-card-one">
+        <span>☕</span>
+        <div><strong>Code mode</strong><small>Always learning</small></div>
+      </div>
+
+      <div className="dev-floating-card dev-card-two">
+        <span className="dev-check">✓</span>
+        <div><strong>Problem solved</strong><small>Java developer</small></div>
+      </div>
+
+      <div className="developer">
+        <div className="dev-hair"></div>
+        <div className="dev-head">
+          <div className="dev-ear dev-ear-left"></div>
+          <div className="dev-ear dev-ear-right"></div>
+          <div className="dev-face">
+            <div className="dev-eyebrow eyebrow-left"></div>
+            <div className="dev-eyebrow eyebrow-right"></div>
+            <div className="dev-eye eye-left"></div>
+            <div className="dev-eye eye-right"></div>
+            <div className="dev-nose"></div>
+            <div className="dev-smile"></div>
+            <div className="dev-blush blush-left"></div>
+            <div className="dev-blush blush-right"></div>
+          </div>
+        </div>
+
+        <div className="dev-neck"></div>
+        <div className="dev-body">
+          <div className="dev-shirt-mark">R</div>
+          <div className="dev-arm arm-left"></div>
+          <div className="dev-arm arm-right"></div>
+        </div>
+
+        <div className="dev-laptop">
+          <div className="laptop-screen">
+            <div className="laptop-camera"></div>
+            <div className="laptop-code">
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+              <span></span><span></span>
+            </div>
+            <div className="laptop-screen-glow"></div>
+          </div>
+          <div className="laptop-base"></div>
+        </div>
+      </div>
+
+      <div className="dev-platform"></div>
+      <div className="scene-caption">Building something awesome <span>🚀</span></div>
+    </div>
+  );
+}
+
+// CSS-based animated AI robot
+function RobotMascot() {
+  return (
+    <div className="robot-scene" aria-label="Cute animated AI robot">
+      <div className="robot-halo"></div>
+      <div className="robot-star star-one">✦</div>
+      <div className="robot-star star-two">✧</div>
+      <div className="robot-star star-three">+</div>
+
+      <div className="robot">
+        <div className="robot-antenna">
+          <span></span>
+        </div>
+
+        <div className="robot-ear robot-ear-left"></div>
+        <div className="robot-ear robot-ear-right"></div>
+
+        <div className="robot-head">
+          <div className="robot-face">
+            <div className="robot-eye robot-eye-left"></div>
+            <div className="robot-eye robot-eye-right"></div>
+            <div className="robot-mouth"></div>
+            <div className="robot-cheek robot-cheek-left"></div>
+            <div className="robot-cheek robot-cheek-right"></div>
+          </div>
+          <div className="robot-head-shine"></div>
+        </div>
+
+        <div className="robot-neck"></div>
+        <div className="robot-body">
+          <div className="robot-chest">
+            <span>AI</span>
+            <i></i>
+          </div>
+          <div className="robot-arm robot-arm-left"></div>
+          <div className="robot-arm robot-arm-right"></div>
+        </div>
+
+        <div className="robot-leg robot-leg-left"></div>
+        <div className="robot-leg robot-leg-right"></div>
+      </div>
+
+      <div className="robot-shadow"></div>
+      <div className="robot-label">Your friendly AI assistant</div>
+    </div>
+  );
+}
+
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -15,10 +128,8 @@ function App() {
 
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
-
   const chatEndRef = useRef(null);
 
-  // Automatically scroll to the latest chat message
   useEffect(() => {
     if (messages.length > 1) {
       chatEndRef.current?.scrollIntoView({
@@ -28,40 +139,55 @@ function App() {
     }
   }, [messages]);
 
-  // Reveal sections smoothly while scrolling
+  // Scroll reveal and active navbar link
   useEffect(() => {
     const elements = document.querySelectorAll(
-      'main section'
+      'main section:not(#home), .info-card, .project-card, .chatbot-container, .contact-content'
     );
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.12
-      }
-    );
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
 
     elements.forEach((element) => {
       element.classList.add('reveal-on-scroll');
-      observer.observe(element);
+      revealObserver.observe(element);
     });
 
-    return () => observer.disconnect();
+    const sections = document.querySelectorAll('main section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const activeObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinks.forEach((link) => {
+            link.classList.toggle(
+              'active-link',
+              link.getAttribute('href') === `#${entry.target.id}`
+            );
+          });
+        }
+      });
+    }, { rootMargin: '-25% 0px -60% 0px' });
+
+    sections.forEach((section) => activeObserver.observe(section));
+
+    return () => {
+      revealObserver.disconnect();
+      activeObserver.disconnect();
+    };
   }, []);
 
-  // Send message and receive AI response as a stream
+  // Existing Gemini streaming chatbot logic
   const sendMessage = async (event) => {
     event.preventDefault();
 
     const message = chatInput.trim();
-
     if (!message || chatLoading) return;
 
     setMessages((previous) => [
@@ -78,9 +204,7 @@ function App() {
         `${import.meta.env.VITE_API_BASE_URL}/api/chat/stream`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message })
         }
       );
@@ -95,7 +219,6 @@ function App() {
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-
       let receivedText = '';
 
       const updateBotMessage = (text) => {
@@ -114,12 +237,9 @@ function App() {
 
       while (true) {
         const { value, done } = await reader.read();
-
         if (done) break;
 
-        const chunk = decoder.decode(value, {
-          stream: true
-        });
+        const chunk = decoder.decode(value, { stream: true });
 
         if (chunk) {
           receivedText += chunk;
@@ -137,7 +257,6 @@ function App() {
       if (!receivedText.trim()) {
         throw new Error('The assistant returned an empty response.');
       }
-
     } catch (error) {
       console.error('Chat error:', error);
 
@@ -152,7 +271,6 @@ function App() {
 
         return updated;
       });
-
     } finally {
       setChatLoading(false);
     }
@@ -162,7 +280,6 @@ function App() {
 
   return (
     <>
-      {/* Navbar */}
       <nav className="navbar">
         <a href="#home" className="logo" onClick={closeMenu}>
           Rishabh<span>.</span>
@@ -195,7 +312,7 @@ function App() {
       </nav>
 
       <main>
-        {/* Hero Section */}
+        {/* HOME */}
         <section id="home" className="hero">
           <div className="hero-content">
             <div className="availability">
@@ -203,158 +320,68 @@ function App() {
               Available for opportunities
             </div>
 
-            <p className="hero-tag">WELCOME TO MY PORTFOLIO</p>
+            <p className="hero-tag">WELCOME TO MY LITTLE CORNER</p>
 
             <h1>
-              Building Digital
+              Hey, I'm <span>Rishabh!</span>
               <br />
-              Solutions with <span>Code.</span>
+              I build things
+              <br />
+              with <span className="highlight-text">code.</span>
             </h1>
 
-            <h2>
-              I'm <span>Rishabh</span> — Java Backend Developer
-            </h2>
+            <h2>Java Backend Developer <span>👨‍💻</span></h2>
 
             <p className="hero-description">
               I build secure, scalable and efficient web applications
               using Java, Spring Boot, PostgreSQL and modern technologies.
-              I enjoy solving problems and developing practical solutions.
+              I enjoy solving problems and bringing ideas to life.
             </p>
 
             <div className="hero-buttons">
               <a href="#projects" className="primary-btn">
                 Explore My Work <span>↗</span>
               </a>
-
               <a href="#contact" className="secondary-btn">
-                Contact Me
+                Let's Talk
               </a>
             </div>
 
             <div className="hero-social-links">
-              <a
-                href="https://github.com/rish-on-code"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://github.com/rish-on-code" target="_blank" rel="noopener noreferrer">
                 GitHub ↗
               </a>
-
-              <a
-                href="https://www.linkedin.com/in/rishabh-rana-65982a253/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.linkedin.com/in/rishabh-rana-65982a253/" target="_blank" rel="noopener noreferrer">
                 LinkedIn ↗
               </a>
             </div>
           </div>
 
           <div className="hero-visual">
-            <div className="visual-glow"></div>
+            <DeveloperMascot />
+          </div>
 
-            <div className="code-window">
-              <div className="code-header">
-                <div className="window-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-
-                <p>Developer.java</p>
-                <span className="code-status">● Java</span>
-              </div>
-
-              <div className="code-body">
-                <div className="code-line">
-                  <span className="line-number">01</span>
-                  <span><span className="code-purple">public class</span> <span className="code-yellow">Developer</span> {'{'}</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">02</span>
-                  <span className="code-indent"><span className="code-purple">String</span> name = <span className="code-green">"Rishabh"</span>;</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">03</span>
-                  <span className="code-indent"><span className="code-purple">String</span> role = <span className="code-green">"Backend Developer"</span>;</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">04</span>
-                  <span></span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">05</span>
-                  <span className="code-indent"><span className="code-purple">public void</span> <span className="code-blue">buildSolutions</span>() {'{'}</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">06</span>
-                  <span className="code-indent-2">learn();</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">07</span>
-                  <span className="code-indent-2">develop();</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">08</span>
-                  <span className="code-indent-2">solveProblems();</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">09</span>
-                  <span className="code-indent">{'}'}</span>
-                </div>
-
-                <div className="code-line">
-                  <span className="line-number">10</span>
-                  <span>{'}'}</span>
-                </div>
-
-                <div className="terminal-line">
-                  <span className="terminal-symbol">❯</span>
-                  <span>Building something meaningful...</span>
-                  <span className="terminal-cursor"></span>
-                </div>
-              </div>
-            </div>
-
-            <div className="floating-card floating-card-top">
-              <span className="floating-icon">⌘</span>
-              <div>
-                <strong>Clean Code</strong>
-                <small>Built with purpose</small>
-              </div>
-            </div>
-
-            <div className="floating-card floating-card-bottom">
-              <span className="floating-icon">⚡</span>
-              <div>
-                <strong>Backend Development</strong>
-                <small>Java • Spring Boot</small>
-              </div>
-            </div>
+          <div className="hero-bottom-note">
+            <span></span> SCROLL TO EXPLORE <span>↓</span>
           </div>
         </section>
 
-        {/* About Section */}
+        {/* ABOUT */}
         <section id="about" className="about section">
           <div className="section-heading">
-            <p className="section-label">GET TO KNOW ME</p>
-            <h2>About <span>Me</span></h2>
+            <p className="section-label">A LITTLE ABOUT ME</p>
+            <h2>Behind the <span>Code</span></h2>
             <div className="heading-line"></div>
+            <p className="section-subtitle">
+              A curious developer who loves learning and building.
+            </p>
           </div>
 
           <div className="about-content">
             <div className="about-text info-card">
               <div className="card-top-label">
                 <span className="card-icon">01</span>
-                <span>WHO I AM</span>
+                <span>MY STORY</span>
               </div>
 
               <h3>Java Backend Developer</h3>
@@ -384,27 +411,19 @@ function App() {
             <div className="skills-card info-card">
               <div className="card-top-label">
                 <span className="card-icon">02</span>
-                <span>MY TOOLKIT</span>
+                <span>MY SUPERPOWERS</span>
               </div>
 
               <h3>Technical Skills</h3>
-
               <p className="skills-description">
-                Technologies and tools I use to build applications.
+                Tools I use to turn ideas into applications.
               </p>
 
               <div className="skills-list">
                 {[
-                  'Java',
-                  'Spring Boot',
-                  'Spring Security',
-                  'JWT Authentication',
-                  'REST APIs',
-                  'PostgreSQL',
-                  'React.js',
-                  'JavaScript',
-                  'HTML & CSS',
-                  'Git & GitHub'
+                  'Java', 'Spring Boot', 'Spring Security',
+                  'JWT Authentication', 'REST APIs', 'PostgreSQL',
+                  'React.js', 'JavaScript', 'HTML & CSS', 'Git & GitHub'
                 ].map((skill) => (
                   <span key={skill}>{skill}</span>
                 ))}
@@ -413,14 +432,14 @@ function App() {
           </div>
         </section>
 
-        {/* Projects Section */}
+        {/* PROJECTS */}
         <section id="projects" className="projects section">
           <div className="section-heading">
-            <p className="section-label">MY RECENT WORK</p>
-            <h2>Featured <span>Projects</span></h2>
+            <p className="section-label">THINGS I'VE BUILT</p>
+            <h2>My <span>Projects</span></h2>
             <div className="heading-line"></div>
             <p className="section-subtitle">
-              A selection of projects where I turn ideas into working applications.
+              Some practical applications built with curiosity and code.
             </p>
           </div>
 
@@ -432,7 +451,6 @@ function App() {
               </div>
 
               <div className="project-category">FULL STACK APPLICATION</div>
-
               <h3>Job Application Tracker</h3>
 
               <p>
@@ -451,28 +469,13 @@ function App() {
               </div>
 
               <div className="project-links">
-                <a
-                  href="https://github.com/rish-on-code/jobtracker-backend"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href="https://github.com/rish-on-code/jobtracker-backend" target="_blank" rel="noreferrer">
                   Backend GitHub ↗
                 </a>
-
-                <a
-                  href="https://github.com/rish-on-code/jobtracker-frontend"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href="https://github.com/rish-on-code/jobtracker-frontend" target="_blank" rel="noreferrer">
                   Frontend GitHub ↗
                 </a>
-
-                <a
-                  href="https://jobtracker-frontend-bice.vercel.app"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="live-link"
-                >
+                <a href="https://jobtracker-frontend-bice.vercel.app" target="_blank" rel="noreferrer" className="live-link">
                   Live Demo ↗
                 </a>
               </div>
@@ -485,7 +488,6 @@ function App() {
               </div>
 
               <div className="project-category">CORE JAVA APPLICATION</div>
-
               <h3>Java Console Quiz App</h3>
 
               <p>
@@ -501,11 +503,7 @@ function App() {
               </div>
 
               <div className="project-links">
-                <a
-                  href="https://github.com/rish-on-code/quiz-console-app"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href="https://github.com/rish-on-code/quiz-console-app" target="_blank" rel="noreferrer">
                   GitHub Repository ↗
                 </a>
               </div>
@@ -513,115 +511,103 @@ function App() {
           </div>
         </section>
 
-        {/* AI Assistant Section */}
+        {/* AI ASSISTANT */}
         <section id="assistant" className="assistant section">
           <div className="section-heading">
-            <p className="section-label">INTERACTIVE EXPERIENCE</p>
-            <h2>Meet My <span>AI Assistant</span></h2>
+            <p className="section-label">SAY HELLO TO MY ROBOT</p>
+            <h2>Meet My <span>AI Buddy!</span></h2>
             <div className="heading-line"></div>
             <p className="section-subtitle">
-              Have a question? Start a conversation with my AI assistant.
+              Curious about me? My little AI buddy has the answers.
             </p>
           </div>
 
-          <div className="chatbot-container">
-            <div className="chatbot-header">
-              <div className="bot-avatar">AI</div>
-
-              <div className="bot-details">
-                <h3>Rishabh's AI Assistant</h3>
-
-                <p>
+          <div className="assistant-layout">
+            <div className="robot-side">
+              <RobotMascot />
+              <div className="robot-side-text">
+                <h3>Hi, I'm RishiBot! <span>🤖</span></h3>
+                <p>Your friendly portfolio assistant. Ask me anything about Rishabh!</p>
+                <div className="robot-status">
                   <span className="online-dot"></span>
-                  {chatLoading ? 'Thinking...' : 'Online and ready to help'}
-                </p>
+                  Always ready to help
+                </div>
+              </div>
+            </div>
+
+            <div className="chatbot-container">
+              <div className="chatbot-header">
+                <div className="bot-avatar">AI</div>
+                <div className="bot-details">
+                  <h3>Rishabh's AI Assistant</h3>
+                  <p>
+                    <span className="online-dot"></span>
+                    {chatLoading ? 'Thinking...' : 'Online and ready to help'}
+                  </p>
+                </div>
+                <span className="ai-badge">GEMINI AI</span>
               </div>
 
-              <span className="ai-badge">AI POWERED</span>
+              <div className="chat-messages" aria-live="polite">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={message.role === 'user' ? 'user-message' : 'bot-message'}
+                  >
+                    {message.role === 'bot' && !message.text && chatLoading ? (
+                      <div className="typing-indicator" role="status" aria-label="Assistant is typing">
+                        <span></span><span></span><span></span>
+                      </div>
+                    ) : (
+                      <ReactMarkdown>{message.text}</ReactMarkdown>
+                    )}
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+
+              <form className="chat-input" onSubmit={sendMessage}>
+                <input
+                  type="text"
+                  placeholder="Ask me about Rishabh's projects..."
+                  value={chatInput}
+                  onChange={(event) => setChatInput(event.target.value)}
+                  disabled={chatLoading}
+                  aria-label="Message for AI assistant"
+                />
+                <button type="submit" disabled={chatLoading || !chatInput.trim()}>
+                  {chatLoading ? 'Sending...' : 'Send'} <span>↗</span>
+                </button>
+              </form>
+
+              <p className="chat-note">
+                Powered by Gemini AI • Responses in English
+              </p>
             </div>
-
-            <div className="chat-messages" aria-live="polite">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={
-                    message.role === 'user'
-                      ? 'user-message'
-                      : 'bot-message'
-                  }
-                >
-                  {message.role === 'bot' &&
-                  !message.text &&
-                  chatLoading ? (
-                    <div
-                      className="typing-indicator"
-                      role="status"
-                      aria-label="Assistant is typing"
-                    >
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </div>
-                  ) : (
-                    <ReactMarkdown>{message.text}</ReactMarkdown>
-                  )}
-                </div>
-              ))}
-
-              <div ref={chatEndRef} />
-            </div>
-
-            <form className="chat-input" onSubmit={sendMessage}>
-              <input
-                type="text"
-                placeholder="Ask me about Rishabh's projects..."
-                value={chatInput}
-                onChange={(event) => setChatInput(event.target.value)}
-                disabled={chatLoading}
-                aria-label="Message for AI assistant"
-              />
-
-              <button
-                type="submit"
-                disabled={chatLoading || !chatInput.trim()}
-              >
-                {chatLoading ? 'Sending...' : 'Send'} <span>↗</span>
-              </button>
-            </form>
-
-            <p className="chat-note">
-              AI-powered assistant • Responses in English
-            </p>
           </div>
         </section>
 
-        {/* Contact Section */}
+        {/* CONTACT */}
         <section id="contact" className="contact section">
           <div className="section-heading">
-            <p className="section-label">GET IN TOUCH</p>
-            <h2>Let's Work <span>Together</span></h2>
+            <p className="section-label">LET'S CONNECT</p>
+            <h2>Let's Make Something <span>Cool!</span></h2>
             <div className="heading-line"></div>
           </div>
 
           <div className="contact-content">
             <div className="contact-intro">
               <span className="contact-overline">HAVE AN IDEA?</span>
-
               <h3>Let's build something <span>great.</span></h3>
-
               <p>
-                I'm always open to discussing new projects,
-                creative ideas and opportunities.
-                Feel free to reach out!
+                I'm open to discussing new projects, creative ideas
+                and opportunities. Feel free to reach out!
               </p>
+              <div className="contact-decoration">✦ ✧ ✦</div>
             </div>
 
             <div className="social-links">
-              <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=rishabhrana737@gmail.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rishabhrana737@gmail.com" target="_blank" rel="noopener noreferrer">
                 <span className="social-icon">✉</span>
                 <span className="social-info">
                   <strong>Email Me</strong>
@@ -630,11 +616,7 @@ function App() {
                 <span className="social-arrow">↗</span>
               </a>
 
-              <a
-                href="https://www.linkedin.com/in/rishabh-rana-65982a253/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.linkedin.com/in/rishabh-rana-65982a253/" target="_blank" rel="noopener noreferrer">
                 <span className="social-icon">in</span>
                 <span className="social-info">
                   <strong>LinkedIn</strong>
@@ -643,11 +625,7 @@ function App() {
                 <span className="social-arrow">↗</span>
               </a>
 
-              <a
-                href="https://github.com/rish-on-code"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://github.com/rish-on-code" target="_blank" rel="noopener noreferrer">
                 <span className="social-icon">⌘</span>
                 <span className="social-info">
                   <strong>GitHub</strong>
@@ -660,16 +638,12 @@ function App() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
           <a href="#home" className="footer-logo">
             Rishabh<span>.</span>
           </a>
-
-          <p>
-            Java Backend Developer | Building Solutions Through Code
-          </p>
+          <p>Java Backend Developer | Building Solutions Through Code</p>
 
           <div className="footer-links">
             <a href="#home">Home</a>
@@ -679,10 +653,7 @@ function App() {
           </div>
 
           <div className="footer-divider"></div>
-
-          <p className="copyright">
-            © 2026 Rishabh. All rights reserved.
-          </p>
+          <p className="copyright">© 2026 Rishabh. All rights reserved.</p>
         </div>
       </footer>
     </>
