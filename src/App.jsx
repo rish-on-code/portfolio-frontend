@@ -1,3 +1,4 @@
+
 import ReactMarkdown from 'react-markdown';
 import { useState, useEffect, useRef } from 'react';
 import './index.css';
@@ -15,9 +16,9 @@ function App() {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
 
-  // Automatically scroll to the latest chat message
   const chatEndRef = useRef(null);
 
+  // Automatically scroll to the latest chat message
   useEffect(() => {
     if (messages.length > 1) {
       chatEndRef.current?.scrollIntoView({
@@ -26,6 +27,34 @@ function App() {
       });
     }
   }, [messages]);
+
+  // Reveal sections smoothly while scrolling
+  useEffect(() => {
+    const elements = document.querySelectorAll(
+      'main section'
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12
+      }
+    );
+
+    elements.forEach((element) => {
+      element.classList.add('reveal-on-scroll');
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Send message and receive AI response as a stream
   const sendMessage = async (event) => {
@@ -133,8 +162,11 @@ function App() {
 
   return (
     <>
+      {/* Navbar */}
       <nav className="navbar">
-        <h2>Rishabh</h2>
+        <a href="#home" className="logo" onClick={closeMenu}>
+          Rishabh<span>.</span>
+        </a>
 
         <button
           className="menu-toggle"
@@ -158,22 +190,30 @@ function App() {
           download="Rishabh-Rana-CV.pdf"
           className="download-btn"
         >
-          Download CV
+          Download CV <span>↓</span>
         </a>
       </nav>
 
       <main>
-
         {/* Hero Section */}
         <section id="home" className="hero">
           <div className="hero-content">
+            <div className="availability">
+              <span className="online-dot"></span>
+              Available for opportunities
+            </div>
+
             <p className="hero-tag">WELCOME TO MY PORTFOLIO</p>
 
             <h1>
-              Hello, I'm <span>Rishabh</span>
+              Building Digital
+              <br />
+              Solutions with <span>Code.</span>
             </h1>
 
-            <h2>Java Backend Developer</h2>
+            <h2>
+              I'm <span>Rishabh</span> — Java Backend Developer
+            </h2>
 
             <p className="hero-description">
               I build secure, scalable and efficient web applications
@@ -183,7 +223,7 @@ function App() {
 
             <div className="hero-buttons">
               <a href="#projects" className="primary-btn">
-                Explore My Work →
+                Explore My Work <span>↗</span>
               </a>
 
               <a href="#contact" className="secondary-btn">
@@ -211,34 +251,112 @@ function App() {
           </div>
 
           <div className="hero-visual">
+            <div className="visual-glow"></div>
+
             <div className="code-window">
               <div className="code-header">
-                <span></span><span></span><span></span>
+                <div className="window-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <p>Developer.java</p>
+                <span className="code-status">● Java</span>
               </div>
 
-              <pre>
-                <code>{`public class Developer {
-  String name = "Rishabh";
-  String role = "Java Backend Developer";
+              <div className="code-body">
+                <div className="code-line">
+                  <span className="line-number">01</span>
+                  <span><span className="code-purple">public class</span> <span className="code-yellow">Developer</span> {'{'}</span>
+                </div>
 
-  public void build() {
-    System.out.println("Building...");
-  }
-}`}</code>
-              </pre>
+                <div className="code-line">
+                  <span className="line-number">02</span>
+                  <span className="code-indent"><span className="code-purple">String</span> name = <span className="code-green">"Rishabh"</span>;</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">03</span>
+                  <span className="code-indent"><span className="code-purple">String</span> role = <span className="code-green">"Backend Developer"</span>;</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">04</span>
+                  <span></span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">05</span>
+                  <span className="code-indent"><span className="code-purple">public void</span> <span className="code-blue">buildSolutions</span>() {'{'}</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">06</span>
+                  <span className="code-indent-2">learn();</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">07</span>
+                  <span className="code-indent-2">develop();</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">08</span>
+                  <span className="code-indent-2">solveProblems();</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">09</span>
+                  <span className="code-indent">{'}'}</span>
+                </div>
+
+                <div className="code-line">
+                  <span className="line-number">10</span>
+                  <span>{'}'}</span>
+                </div>
+
+                <div className="terminal-line">
+                  <span className="terminal-symbol">❯</span>
+                  <span>Building something meaningful...</span>
+                  <span className="terminal-cursor"></span>
+                </div>
+              </div>
+            </div>
+
+            <div className="floating-card floating-card-top">
+              <span className="floating-icon">⌘</span>
+              <div>
+                <strong>Clean Code</strong>
+                <small>Built with purpose</small>
+              </div>
+            </div>
+
+            <div className="floating-card floating-card-bottom">
+              <span className="floating-icon">⚡</span>
+              <div>
+                <strong>Backend Development</strong>
+                <small>Java • Spring Boot</small>
+              </div>
             </div>
           </div>
         </section>
 
         {/* About Section */}
-        <section id="about" className="about">
+        <section id="about" className="about section">
           <div className="section-heading">
-            <p>GET TO KNOW ME</p>
+            <p className="section-label">GET TO KNOW ME</p>
             <h2>About <span>Me</span></h2>
+            <div className="heading-line"></div>
           </div>
 
           <div className="about-content">
-            <div className="about-text">
+            <div className="about-text info-card">
+              <div className="card-top-label">
+                <span className="card-icon">01</span>
+                <span>WHO I AM</span>
+              </div>
+
               <h3>Java Backend Developer</h3>
 
               <p>
@@ -256,10 +374,24 @@ function App() {
                 Currently, I'm improving my development skills
                 and building real-world projects.
               </p>
+
+              <div className="about-highlight">
+                <span>✦</span>
+                Focused on learning, building and growing.
+              </div>
             </div>
 
-            <div className="skills-card">
+            <div className="skills-card info-card">
+              <div className="card-top-label">
+                <span className="card-icon">02</span>
+                <span>MY TOOLKIT</span>
+              </div>
+
               <h3>Technical Skills</h3>
+
+              <p className="skills-description">
+                Technologies and tools I use to build applications.
+              </p>
 
               <div className="skills-list">
                 {[
@@ -282,15 +414,24 @@ function App() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="projects">
+        <section id="projects" className="projects section">
           <div className="section-heading">
-            <p>MY RECENT WORK</p>
+            <p className="section-label">MY RECENT WORK</p>
             <h2>Featured <span>Projects</span></h2>
+            <div className="heading-line"></div>
+            <p className="section-subtitle">
+              A selection of projects where I turn ideas into working applications.
+            </p>
           </div>
 
           <div className="projects-container">
             <div className="project-card">
-              <div className="project-icon">💼</div>
+              <div className="project-top">
+                <div className="project-icon">💼</div>
+                <span className="project-number">01 / 02</span>
+              </div>
+
+              <div className="project-category">FULL STACK APPLICATION</div>
 
               <h3>Job Application Tracker</h3>
 
@@ -330,6 +471,7 @@ function App() {
                   href="https://jobtracker-frontend-bice.vercel.app"
                   target="_blank"
                   rel="noreferrer"
+                  className="live-link"
                 >
                   Live Demo ↗
                 </a>
@@ -337,7 +479,12 @@ function App() {
             </div>
 
             <div className="project-card">
-              <div className="project-icon">🧠</div>
+              <div className="project-top">
+                <div className="project-icon">🧠</div>
+                <span className="project-number">02 / 02</span>
+              </div>
+
+              <div className="project-category">CORE JAVA APPLICATION</div>
 
               <h3>Java Console Quiz App</h3>
 
@@ -367,24 +514,30 @@ function App() {
         </section>
 
         {/* AI Assistant Section */}
-        <section id="assistant" className="assistant">
+        <section id="assistant" className="assistant section">
           <div className="section-heading">
-            <p>LET'S TALK</p>
+            <p className="section-label">INTERACTIVE EXPERIENCE</p>
             <h2>Meet My <span>AI Assistant</span></h2>
+            <div className="heading-line"></div>
+            <p className="section-subtitle">
+              Have a question? Start a conversation with my AI assistant.
+            </p>
           </div>
 
           <div className="chatbot-container">
             <div className="chatbot-header">
               <div className="bot-avatar">AI</div>
 
-              <div>
+              <div className="bot-details">
                 <h3>Rishabh's AI Assistant</h3>
 
                 <p>
                   <span className="online-dot"></span>
-                  {chatLoading ? 'Thinking...' : 'Online'}
+                  {chatLoading ? 'Thinking...' : 'Online and ready to help'}
                 </p>
               </div>
+
+              <span className="ai-badge">AI POWERED</span>
             </div>
 
             <div className="chat-messages" aria-live="polite">
@@ -398,20 +551,20 @@ function App() {
                   }
                 >
                   {message.role === 'bot' &&
-!message.text &&
-chatLoading ? (
-  <div
-    className="typing-indicator"
-    role="status"
-    aria-label="Assistant is typing"
-  >
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-) : (
-  <ReactMarkdown>{message.text}</ReactMarkdown>
-)}
+                  !message.text &&
+                  chatLoading ? (
+                    <div
+                      className="typing-indicator"
+                      role="status"
+                      aria-label="Assistant is typing"
+                    >
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  ) : (
+                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                  )}
                 </div>
               ))}
 
@@ -432,7 +585,7 @@ chatLoading ? (
                 type="submit"
                 disabled={chatLoading || !chatInput.trim()}
               >
-                {chatLoading ? 'Sending...' : 'Send'}
+                {chatLoading ? 'Sending...' : 'Send'} <span>↗</span>
               </button>
             </form>
 
@@ -443,20 +596,25 @@ chatLoading ? (
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="contact">
+        <section id="contact" className="contact section">
           <div className="section-heading">
-            <p>GET IN TOUCH</p>
+            <p className="section-label">GET IN TOUCH</p>
             <h2>Let's Work <span>Together</span></h2>
+            <div className="heading-line"></div>
           </div>
 
           <div className="contact-content">
-            <h3>Have a Project in Mind?</h3>
+            <div className="contact-intro">
+              <span className="contact-overline">HAVE AN IDEA?</span>
 
-            <p>
-              I'm always open to discussing new projects,
-              creative ideas and opportunities.
-              Feel free to reach out!
-            </p>
+              <h3>Let's build something <span>great.</span></h3>
+
+              <p>
+                I'm always open to discussing new projects,
+                creative ideas and opportunities.
+                Feel free to reach out!
+              </p>
+            </div>
 
             <div className="social-links">
               <a
@@ -464,9 +622,12 @@ chatLoading ? (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>✉</span>
-                <strong>Email Me</strong>
-                <small>rishabhrana737@gmail.com</small>
+                <span className="social-icon">✉</span>
+                <span className="social-info">
+                  <strong>Email Me</strong>
+                  <small>rishabhrana737@gmail.com</small>
+                </span>
+                <span className="social-arrow">↗</span>
               </a>
 
               <a
@@ -474,9 +635,12 @@ chatLoading ? (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>in</span>
-                <strong>LinkedIn</strong>
-                <small>Connect with me</small>
+                <span className="social-icon">in</span>
+                <span className="social-info">
+                  <strong>LinkedIn</strong>
+                  <small>Connect with me</small>
+                </span>
+                <span className="social-arrow">↗</span>
               </a>
 
               <a
@@ -484,20 +648,24 @@ chatLoading ? (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>⌘</span>
-                <strong>GitHub</strong>
-                <small>Explore my projects</small>
+                <span className="social-icon">⌘</span>
+                <span className="social-info">
+                  <strong>GitHub</strong>
+                  <small>Explore my projects</small>
+                </span>
+                <span className="social-arrow">↗</span>
               </a>
             </div>
           </div>
         </section>
-
       </main>
 
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
-          <h2>Rishabh<span>.</span></h2>
+          <a href="#home" className="footer-logo">
+            Rishabh<span>.</span>
+          </a>
 
           <p>
             Java Backend Developer | Building Solutions Through Code
